@@ -9,4 +9,4 @@ concept same_as = is_same<T, U>::value;
 
 int const& f();
 
-same_as<int const&> auto& i = f();
+// same_as<int const&> auto& i = f();

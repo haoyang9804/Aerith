@@ -69,7 +69,9 @@ bool HelloWorld::VisitCXXRecordDecl(CXXRecordDecl *Declaration) {
 bool HelloWorld::VisitTemplateDecl(TemplateDecl* Declaration) {
   FullSourceLoc FullLocation = Context->getFullLoc(Declaration->getBeginLoc());
   SourceManager &SrcMgr = Context->getSourceManager();
+  llvm::errs() << "Template location:\n";
   FullLocation.print(llvm::errs(), SrcMgr);
+  llvm::errs() << "\n";
   return true;
 }
 

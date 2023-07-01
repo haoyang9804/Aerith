@@ -9,3 +9,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall\
     -fdiagnostics-color=always")
 
 add_library(play SHARED play.cpp)
+
+target_link_libraries(play
+  "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
