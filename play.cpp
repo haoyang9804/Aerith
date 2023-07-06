@@ -72,6 +72,12 @@ bool HelloWorld::VisitTemplateDecl(TemplateDecl* Declaration) {
   llvm::errs() << "Template location:\n";
   FullLocation.print(llvm::errs(), SrcMgr);
   llvm::errs() << "\n";
+  llvm::errs() << "Template arguments' names:\n";
+  TemplateParameterList* pl = Declaration->getTemplateParameters();
+  ArrayRef<NamedDecl *> parameterArray = pl->asArray();
+  for (auto it = parameterArray.begin(); it != parameterArray.end(); it++) {
+    llvm::errs() << (*it)->getName() << "\n";
+  }  
   return true;
 }
 
