@@ -60,8 +60,7 @@ std::string AddTrivialConcept(std::string code, const std::string& conceptName) 
   tooling::runToolOnCodeWithArgs(std::make_unique<AddTrivialConceptAction>(rewriter, conceptName), code, 
     {
       "-std=c++20",
-      "-stdlib=libc++",
-      "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers",
+      "-I/opt/homebrew/Cellar/llvm/16.0.6/lib/clang/16/include",
       });
   return "";
 }
