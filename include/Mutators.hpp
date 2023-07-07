@@ -4,6 +4,6 @@
 #include <string>
 
 std::string Add1stConcept(std::string code);
-std::string AddTrivialConcept(std::string code);
+std::string AddTrivialConcept(std::string code, const std::string& conceptName);
 
 #endif 

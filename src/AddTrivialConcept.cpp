@@ -6,34 +6,57 @@
 #include "llvm/ADT/StringMap.h"
 #include "llvm/Support/raw_ostream.h"
 #include "clang/Rewrite/Core/Rewriter.h"
+#include "clang/Tooling/Tooling.h"
 
 using namespace clang;
 
 class AddTrivialConceptVisitor : public RecursiveASTVisitor<AddTrivialConceptVisitor> {
 public:
-  explicit AddTrivialConceptVisitor(ASTContext *context, Rewriter& rewriter) :
-    context(context), rewriter(rewriter) {}
+  explicit AddTrivialConceptVisitor(ASTContext *context, Rewriter& rewriter, const std::string& conceptName) :
+    context(context), rewriter(rewriter), conceptName(conceptName) {}
   
+  // bool visitConceptDecl(ConceptDecl* decl) {
+  //   llvm::errs() << decl->getQualifiedNameAsString() << "\n";
+  //   return true;  
+  // }
+
 private:
   ASTContext *context;
-  Rewriter rewriter;
-
+  Rewriter& rewriter;
+  const std::string& conceptName;
 };
 
 class AddTrivialConceptASTConsumer : public clang::ASTConsumer {
 public:
-  AddTrivialConceptASTConsumer(Rewriter& rewriter) :
-    rewriter(rewriter) {}
+  AddTrivialConceptASTConsumer(ASTContext *context, Rewriter& rewriter, const std::string& conceptName) :
+    visitor(context, rewriter, conceptName) {}
   void HandleTranslationUnit(ASTContext &Ctx) override {
-    
+    visitor.TraverseDecl(Ctx.getTranslationUnitDecl());
   }
 
 private:
-  Rewriter rewriter;
+  AddTrivialConceptVisitor visitor;
 };
 
-
-
-std::string AddTrivialConcept(std::string code) {
+class AddTrivialConceptAction : public ASTFrontendAction {
+public:
+  explicit AddTrivialConceptAction(Rewriter& rewriter, const std::string& conceptName) :
+     rewriter(rewriter), conceptName(conceptName) {}
+  std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
+                    CompilerInstance &Compiler,
+                    llvm::StringRef InFile) override {
+    return std::unique_ptr<ASTConsumer>(
+      std::make_unique<AddTrivialConceptASTConsumer>(&Compiler.getASTContext(), rewriter, conceptName)
+    );
+  }
+private:
+  Rewriter& rewriter;
+  const std::string& conceptName;
   
+};
+
+std::string AddTrivialConcept(std::string code, const std::string& conceptName) {
+  Rewriter rewriter;
+  tooling::runToolOnCodeWithArgs(std::make_unique<AddTrivialConceptAction>(rewriter, conceptName), code, {"-std=c++20"});
+  return "";
 }

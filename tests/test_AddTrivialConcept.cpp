@@ -7,4 +7,6 @@ int main() {
   std::string code = read("../pool/1.cpp");
   code = Add1stConcept(code);
   std::cout << code << std::endl;
+  std::cout << "==========" << std::endl;
+  AddTrivialConcept(code, "C1");
 }
