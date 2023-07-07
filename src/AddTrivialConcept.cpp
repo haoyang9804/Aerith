@@ -15,10 +15,10 @@ public:
   explicit AddTrivialConceptVisitor(ASTContext *context, Rewriter& rewriter, const std::string& conceptName) :
     context(context), rewriter(rewriter), conceptName(conceptName) {}
   
-  // bool visitConceptDecl(ConceptDecl* decl) {
-  //   llvm::errs() << decl->getQualifiedNameAsString() << "\n";
-  //   return true;  
-  // }
+  bool visitConceptDecl(ConceptDecl* decl) {
+    llvm::errs() << decl->getQualifiedNameAsString() << "\n";
+    return true;  
+  }
 
 private:
   ASTContext *context;
@@ -57,6 +57,11 @@ private:
 
 std::string AddTrivialConcept(std::string code, const std::string& conceptName) {
   Rewriter rewriter;
-  tooling::runToolOnCodeWithArgs(std::make_unique<AddTrivialConceptAction>(rewriter, conceptName), code, {"-std=c++20"});
+  tooling::runToolOnCodeWithArgs(std::make_unique<AddTrivialConceptAction>(rewriter, conceptName), code, 
+    {
+      "-std=c++20",
+      "-stdlib=libc++",
+      "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers",
+      });
   return "";
 }
