@@ -30,54 +30,50 @@ using namespace clang;
 // RecursiveASTVisitor
 //-----------------------------------------------------------------------------
 class HelloWorld : public RecursiveASTVisitor<HelloWorld> {
-public:
-  explicit HelloWorld(ASTContext *Context) : Context(Context) {}
-  bool VisitCXXRecordDecl(CXXRecordDecl *Decl);
-  bool VisitTemplateDecl(TemplateDecl *Decl);
+ public:
+  explicit HelloWorld(ASTContext* Context) : Context(Context) {}
+  bool VisitCXXRecordDecl(CXXRecordDecl* Decl);
+  bool VisitTemplateDecl(TemplateDecl* Decl);
 
   llvm::StringMap<unsigned> getDeclMap() { return DeclMap; }
 
-private:
-  ASTContext *Context;
+ private:
+  ASTContext* Context;
   // Map that contains the count of declaration in every input file
   llvm::StringMap<unsigned> DeclMap;
 };
 
-bool HelloWorld::VisitCXXRecordDecl(CXXRecordDecl *Declaration) {
+bool HelloWorld::VisitCXXRecordDecl(CXXRecordDecl* Declaration) {
   FullSourceLoc FullLocation = Context->getFullLoc(Declaration->getBeginLoc());
 
   // Basic sanity checking
-  if (!FullLocation.isValid())
-    return true;
+  if (!FullLocation.isValid()) return true;
 
   // There are 2 types of source locations: in a file or a macro expansion. The
   // latter contains the spelling location and the expansion location (both are
   // file locations), but only the latter is needed here (i.e. where the macro
   // is expanded). File locations are just that - file locations.
-  if (FullLocation.isMacroID())
-    FullLocation = FullLocation.getExpansionLoc();
+  if (FullLocation.isMacroID()) FullLocation = FullLocation.getExpansionLoc();
 
-  SourceManager &SrcMgr = Context->getSourceManager();
-  const FileEntry *Entry =
-      SrcMgr.getFileEntryForID(SrcMgr.getFileID(FullLocation));
+  SourceManager& SrcMgr = Context->getSourceManager();
+  const FileEntry* Entry = SrcMgr.getFileEntryForID(SrcMgr.getFileID(FullLocation));
   DeclMap[Entry->getName()]++;
 
   return true;
 }
 
-
 bool HelloWorld::VisitTemplateDecl(TemplateDecl* Declaration) {
   FullSourceLoc FullLocation = Context->getFullLoc(Declaration->getBeginLoc());
-  SourceManager &SrcMgr = Context->getSourceManager();
+  SourceManager& SrcMgr = Context->getSourceManager();
   llvm::errs() << "Template location:\n";
   FullLocation.print(llvm::errs(), SrcMgr);
   llvm::errs() << "\n";
   llvm::errs() << "Template arguments' names:\n";
   TemplateParameterList* pl = Declaration->getTemplateParameters();
-  ArrayRef<NamedDecl *> parameterArray = pl->asArray();
+  ArrayRef<NamedDecl*> parameterArray = pl->asArray();
   for (auto it = parameterArray.begin(); it != parameterArray.end(); it++) {
     llvm::errs() << (*it)->getName() << "\n";
-  }  
+  }
   return true;
 }
 
@@ -85,10 +81,10 @@ bool HelloWorld::VisitTemplateDecl(TemplateDecl* Declaration) {
 // ASTConsumer
 //-----------------------------------------------------------------------------
 class HelloWorldASTConsumer : public clang::ASTConsumer {
-public:
-  explicit HelloWorldASTConsumer(ASTContext *Ctx) : Visitor(Ctx) {}
+ public:
+  explicit HelloWorldASTConsumer(ASTContext* Ctx) : Visitor(Ctx) {}
 
-  void HandleTranslationUnit(clang::ASTContext &Ctx) override {
+  void HandleTranslationUnit(clang::ASTContext& Ctx) override {
     Visitor.TraverseDecl(Ctx.getTranslationUnitDecl());
 
     if (Visitor.getDeclMap().empty()) {
@@ -97,13 +93,13 @@ public:
       return;
     }
 
-    for (auto &Element : Visitor.getDeclMap()) {
+    for (auto& Element : Visitor.getDeclMap()) {
       llvm::outs() << "(clang-tutor)  file: " << Element.first() << "\n";
       llvm::outs() << "(clang-tutor)  count: " << Element.second << "\n";
     }
   }
 
-private:
+ private:
   HelloWorld Visitor;
 };
 
@@ -111,15 +107,13 @@ private:
 // FrontendAction for HelloWorld
 //-----------------------------------------------------------------------------
 class FindNamedClassAction : public clang::PluginASTAction {
-public:
-  std::unique_ptr<clang::ASTConsumer>
-  CreateASTConsumer(clang::CompilerInstance &Compiler,
-                    llvm::StringRef InFile) override {
+ public:
+  std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(clang::CompilerInstance& Compiler,
+                                                        llvm::StringRef InFile) override {
     return std::unique_ptr<clang::ASTConsumer>(
         std::make_unique<HelloWorldASTConsumer>(&Compiler.getASTContext()));
   }
-  bool ParseArgs(const CompilerInstance &CI,
-                 const std::vector<std::string> &args) override {
+  bool ParseArgs(const CompilerInstance& CI, const std::vector<std::string>& args) override {
     return true;
   }
 };
@@ -127,5 +121,5 @@ public:
 //-----------------------------------------------------------------------------
 // Registration
 //-----------------------------------------------------------------------------
-static FrontendPluginRegistry::Add<FindNamedClassAction>
-    X(/*Name=*/"hello-world", /*Description=*/"The HelloWorld plugin");
+static FrontendPluginRegistry::Add<FindNamedClassAction> X(/*Name=*/"hello-world",
+                                                           /*Description=*/"The HelloWorld plugin");

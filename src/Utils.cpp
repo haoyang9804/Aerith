@@ -1,9 +1,9 @@
 #include "../include/Utils.hpp"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 std::string read(std::string path) {
   ASSERT(std::filesystem::exists(path), "Path " + path + " does not exists");
@@ -15,13 +15,13 @@ std::string read(std::string path) {
 }
 
 std::vector<std::string> split(const std::string& str, char delimiter) {
-    std::vector<std::string> tokens;
-    std::stringstream ss(str);
-    std::string token;
-    while (getline(ss, token, delimiter)) {
-        tokens.push_back(token);
-    }
-    return tokens;
+  std::vector<std::string> tokens;
+  std::stringstream ss(str);
+  std::string token;
+  while (getline(ss, token, delimiter)) {
+    tokens.push_back(token);
+  }
+  return tokens;
 }
 
 std::string splice(const std::vector<std::string>& tokens) {

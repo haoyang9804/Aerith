@@ -1,9 +1,9 @@
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
-#include <vector>
-#include <string>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #define ASSERT(STATEMENT, STR) \
   if (!(STATEMENT)) throw std::logic_error(STR)

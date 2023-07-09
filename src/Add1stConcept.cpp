@@ -10,6 +10,6 @@ std::string Add1stConcept(std::string code) {
       break;
     }
   }
-  lines.insert(std::next(lines.begin(), offset), "template<typename>\nconcept C1 = true;");
+  lines.insert(std::next(lines.begin(), offset), "template<typename>\nconcept Aerith_Concept1 = true;");
   return splice(lines);
 }
