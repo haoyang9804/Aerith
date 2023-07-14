@@ -9,6 +9,8 @@ TODO:
 */
 
 #include <algorithm>
+#include <utility>
+#include <optional>
 
 #include "../include/Analyzer.hpp"
 #include "../include/Utils.hpp"
@@ -27,22 +29,37 @@ TODO:
 
 using namespace clang;
 
-int _maxid = 0;
+std::pair<unsigned, unsigned> _lastdefined_pos = {0, 0};
+std::optional<std::string> _lastdefined_conceptName = std::nullopt;
 
 class AnalyzeConceptNameVisitor : public RecursiveASTVisitor<AnalyzeConceptNameVisitor> {
 public:
-  explicit AnalyzeConceptNameVisitor() = default;
+  explicit AnalyzeConceptNameVisitor(ASTContext* ctx) : ctx(ctx) {}
   bool VisitConceptDecl(ConceptDecl* decl) {
+    // First analyze if the concept name has the expected form
+    // If it has, record the concept ID in its name
     std::string name = decl->getQualifiedNameAsString();
     std::optional<std::string> ID = getConceptID(name, Config::getInstance().techName + "_Concept");
-    if (ID.has_value()) _maxid = std::max(_maxid, std::stoi(ID.value()) + 1);
+    if (ID.has_value()) Config::getInstance().conceptID = std::max(Config::getInstance().conceptID, std::stoi(ID.value()) + 1);
+    // Then record the line number of this concept in the source code
+    // Update the biggest line number
+    FullSourceLoc FullLocation = ctx->getFullLoc(decl->getBeginLoc());
+    unsigned lineNum = FullLocation.getSpellingLineNumber();
+    unsigned columnNum = FullLocation.getSpellingColumnNumber();
+    std::pair<unsigned, unsigned> pos = {lineNum, columnNum};
+    if (_lastdefined_pos < pos) {
+      _lastdefined_pos = pos;
+      _lastdefined_conceptName = decl->getQualifiedNameAsString();
+    }
     return true;
   }
+private:
+  ASTContext* ctx;
 };
 
 class AnalyzeConceptNameASTConsumer : public ASTConsumer {
 public:
-  AnalyzeConceptNameASTConsumer() : visitor() {}
+  AnalyzeConceptNameASTConsumer(ASTContext* ctx) : visitor(ctx) {}
   void HandleTranslationUnit(ASTContext& Ctx) override {
     visitor.TraverseDecl(Ctx.getTranslationUnitDecl());
   }
@@ -54,27 +71,16 @@ class AnalyzeConceptNameAction : public ASTFrontendAction {
 public:
   explicit AnalyzeConceptNameAction() = default;
   std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(CompilerInstance& Compiler, llvm::StringRef InFile) override {
-    return std::unique_ptr<ASTConsumer>(std::make_unique<AnalyzeConceptNameASTConsumer>());
+    return std::unique_ptr<ASTConsumer>(std::make_unique<AnalyzeConceptNameASTConsumer>(&Compiler.getASTContext()));
   }
 };
 
-/**
- * @brief 
- * 
- * @param code: The C++ code that is ready to be analyzed. 
- * @return a string representation of a integer, which is the ID number
- * of the first concept definition.
- * For instance, if `AnalyzeConceptName` finds there is a concept Named
- * "techName_Concept" followed by an ID number, such as 5.
- * Then this function return str(5), and the first inserted concept will be
- * assigned with the name "techName_Concept6".
- */
-std::string AnalyzeConceptName(std::string code) {
+std::optional<std::string> AnalyzeConceptName(std::string code) {
   tooling::runToolOnCodeWithArgs(std::make_unique<AnalyzeConceptNameAction>(),
                                  code,
                                  {
                                      Config::getInstance().cppStandard,
                                      "-I" + Config::getInstance().includePath,
                                  }); 
-  return std::to_string(_maxid);
+  return _lastdefined_conceptName;
 }
