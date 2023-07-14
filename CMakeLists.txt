@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13.4)
-project(Aerith)
+project(Arthur)
 
 find_package(Clang REQUIRED)
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy" REQUIRED)

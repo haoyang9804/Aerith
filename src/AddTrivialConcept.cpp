@@ -2,6 +2,8 @@
 #include <string>
 
 #include "../include/Utils.hpp"
+#include "../include/Mutators.hpp"
+#include "../include/Config.hpp"
 
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
@@ -35,8 +37,8 @@ class AddTrivialConceptVisitor : public RecursiveASTVisitor<AddTrivialConceptVis
         '?' is assigned in order, starting from 1, which is assigned by `Add1stConcept`
       */
       auto conceptNameSplitter = [] (const std::string& name) {
-        // concept name starts with a common prefix "Aerith_Concept", which is 15 characters long.
-        std::string prefix = "Aerith_Concept";
+        // concept name starts with a common prefix "techName_Concept", which is 15 characters long.
+        std::string prefix = Config::getInstance().techName + "_Concept";
         std::string idstr = name.substr(prefix.size());
         std::string newid = "";
         try{
@@ -46,7 +48,7 @@ class AddTrivialConceptVisitor : public RecursiveASTVisitor<AddTrivialConceptVis
         catch (...) {
           ASSERT_FALSE(idstr + " cannot be converted into a number");
         }
-        return "Aerith_Concept" + newid;
+        return Config::getInstance().techName + "_Concept" + newid;
       };
       std::string newConceptName = conceptNameSplitter(conceptName);
       SourceLocation endsl = decl->getSourceRange().getEnd();
@@ -135,8 +137,8 @@ std::string AddTrivialConcept(std::string code, const std::string& conceptName) 
   tooling::runToolOnCodeWithArgs(std::make_unique<AddTrivialConceptAction>(conceptName, newcode),
                                  code,
                                  {
-                                     "-std=c++20",
-                                     "-I/opt/homebrew/Cellar/llvm/16.0.6/lib/clang/16/include",
+                                     Config::getInstance().cppStandard,
+                                     "-I" + Config::getInstance().includePath,
                                  });
   ASSERT(_find, "Cannot find the concept definition whose name is " + conceptName);
   return newcode;

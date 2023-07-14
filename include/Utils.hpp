@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <optional>
 #include <vector>
 
 #define ASSERT(STATEMENT, STR) \
@@ -10,8 +11,13 @@
 
 #define ASSERT_FALSE(STR) throw std::logic_error(STR)
 
-std::string read(std::string path);
+// Read source code given the path to the file
+std::string read(std::string codePath);
+// Split string by delimiter
 std::vector<std::string> split(const std::string& str, char delimiter);
-std::string splice(const std::vector<std::string>&);
+// Splice a vector of strings into a long string
+std::string splice(const std::vector<std::string>& strvec);
+// get Concept ID if the concept starts with some prefix
+std::optional<std::string> getConceptID(const std::string& conceptName, const std::string& prefix);
 
 #endif

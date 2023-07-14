@@ -31,3 +31,17 @@ std::string splice(const std::vector<std::string>& tokens) {
   }
   return str;
 }
+
+std::optional<std::string> getConceptID(const std::string& conceptName, const std::string& prefix) {
+  if (conceptName.starts_with(prefix)) {
+    std::string possibleID = conceptName.substr(prefix.size(), conceptName.size() - prefix.size());
+    try {
+     std::stoi(possibleID); 
+    }
+    catch (...) {
+      return std::nullopt;
+    }
+    return possibleID;
+  }
+  return std::nullopt;
+}

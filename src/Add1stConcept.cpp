@@ -1,5 +1,6 @@
 #include "../include/Mutators.hpp"
 #include "../include/Utils.hpp"
+#include "../include/Config.hpp"
 
 std::string Add1stConcept(std::string code) {
   std::vector<std::string> lines = split(code, '\n');
@@ -10,6 +11,6 @@ std::string Add1stConcept(std::string code) {
       break;
     }
   }
-  lines.insert(std::next(lines.begin(), offset), "template<typename>\nconcept Aerith_Concept1 = true;");
+  lines.insert(std::next(lines.begin(), offset), "template<typename>\nconcept " + Config::getInstance().techName + "_Concept1 = true;");
   return splice(lines);
 }
