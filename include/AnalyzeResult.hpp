@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
 class AnalyzeResult {
-private:
+ private:
   AnalyzeResult() = default;
-public:
+
+ public:
   AnalyzeResult(const AnalyzeResult&) = delete;
   AnalyzeResult(AnalyzeResult&&) = delete;
   AnalyzeResult& operator=(const AnalyzeResult&) = delete;

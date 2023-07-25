@@ -36,9 +36,8 @@ std::optional<std::string> getConceptID(const std::string& conceptName, const st
   if (conceptName.starts_with(prefix)) {
     std::string possibleID = conceptName.substr(prefix.size(), conceptName.size() - prefix.size());
     try {
-     std::stoi(possibleID); 
-    }
-    catch (...) {
+      std::stoi(possibleID);
+    } catch (...) {
       return std::nullopt;
     }
     return possibleID;

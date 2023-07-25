@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
+#include <string>
+
 #include "../include/Analyzer.hpp"
 #include "../include/Utils.hpp"
-
-#include <string>
 
 TEST(AnalyzeConceptNameTest, AnalyzeConceptName1) {
   std::string code = read("code_pool/1.cpp");

@@ -3,16 +3,17 @@
 
 #include <string>
 
-struct Config {  
-private:
+struct Config {
+ private:
   Config() = default;
-public:
+
+ public:
   std::string techName = "Arthur";
   /*
     Seems that clang::tooling::runToolOnCodeWithArgs cannot header files
     if we build llvm from source or install pre-compiled llvm by brew.
     So we need to configure it here.
-  */ 
+  */
   std::string includePath = "/opt/homebrew/Cellar/llvm/16.0.6/lib/clang/16/include";
   std::string cppStandard = "-std=c++20";
   Config(Config&&) noexcept = delete;
@@ -25,8 +26,6 @@ public:
     static Config config = Config();
     return config;
   }
-
 };
-
 
 #endif

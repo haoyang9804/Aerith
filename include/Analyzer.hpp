@@ -1,8 +1,8 @@
 #ifndef ANALYZER_HPP_
 #define ANALYZER_HPP_
 
-#include <string>
 #include <optional>
+#include <string>
 
 /**
  * @brief This function has three responsibilities:
@@ -12,12 +12,11 @@
  * a vector of concept names in the source code;
  * 3) Return the name of the last concept definition. This name is a landmark
  * after where we can insert the first concept.
- * 
- * @param code The C++ code that is ready to be analyzed. 
+ *
+ * @param code The C++ code that is ready to be analyzed.
  * update the configuration conceptID
  * @return the name of the concept that is last defined (could be nullopt)
  */
 std::optional<std::string> AnalyzeConceptName(std::string code);
-
 
 #endif

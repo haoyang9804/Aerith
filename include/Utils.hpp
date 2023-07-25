@@ -1,9 +1,9 @@
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
+#include <optional>
 #include <stdexcept>
 #include <string>
-#include <optional>
 #include <vector>
 
 #define ASSERT(STATEMENT, STR) \
