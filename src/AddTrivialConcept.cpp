@@ -46,7 +46,7 @@ class AddTrivialConceptVisitor : public RecursiveASTVisitor<AddTrivialConceptVis
           newid = std::to_string(id);
         }
         catch (...) {
-          ASSERT_FALSE(idstr + " cannot be converted into a number");
+          EMIT_ERROR(idstr + " cannot be converted into a number");
         }
         return Config::getInstance().techName + "_Concept" + newid;
       };

@@ -7,7 +7,7 @@ find_program(CLANG_FORMAT_EXE NAMES "clang-format" REQUIRED)
 set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "-checks=-*,clang-analyzer-*")
 set(CLANG_FORMAT_COMMAND "${CLANG_FORMAT_EXE}")
 
-message(STATUS "  ClangConfig.cmake: ${Clang_DIR}/ClangConfig.cmake")
+message(STATUS "ClangConfig.cmake: ${Clang_DIR}/ClangConfig.cmake")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 include(AddLLVM)
 include(${Clang_DIR}/AddClang.cmake)
@@ -45,8 +45,25 @@ add_custom_target(
     ${ALL_CXX_SOURCE_FILES}
 )
 
-enable_testing()
-add_subdirectory(tests)
-add_test(NAME test COMMAND 
-${CMAKE_CURRENT_BINARY_DIR}/tests/test_${PROJECT_NAME}
+# From Jul/25/2023, I used GOOGLE TEST instead of a custom unit test framework.
+
+# enable_testing()
+# add_subdirectory(tests)
+# add_test(NAME test COMMAND 
+# ${CMAKE_CURRENT_BINARY_DIR}/tests/test_${PROJECT_NAME}
+# )
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE 
 )
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+add_subdirectory(google_test)

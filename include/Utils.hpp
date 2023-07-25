@@ -9,7 +9,7 @@
 #define ASSERT(STATEMENT, STR) \
   if (!(STATEMENT)) throw std::logic_error(STR)
 
-#define ASSERT_FALSE(STR) throw std::logic_error(STR)
+#define EMIT_ERROR(STR) throw std::logic_error(STR)
 
 // Read source code given the path to the file
 std::string read(std::string codePath);

@@ -2,8 +2,7 @@
 #include "../include/Analyzer.hpp"
 #include "../include/Utils.hpp"
 #include "../include/Config.hpp"
-
-
+#include "../include/AnalyzeResult.hpp"
 
 
 std::string Add1stTrivialConcept(std::string code) {
@@ -24,10 +23,8 @@ std::string Add1stTrivialConcept(std::string code) {
         break;
       }
     }
-    lines.insert(std::next(lines.begin(), offset), "template<typename>\nconcept " + Config::getInstance().techName + std::to_string(Config::getInstance().conceptID) + " = true;");
+    lines.insert(std::next(lines.begin(), offset), "template<typename>\nconcept " + Config::getInstance().techName + std::to_string(AnalyzeResult::getInstance().conceptID) + " = true;");
     return splice(lines);
   }
-  
-  
   
 }

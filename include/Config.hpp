@@ -15,7 +15,6 @@ public:
   */ 
   std::string includePath = "/opt/homebrew/Cellar/llvm/16.0.6/lib/clang/16/include";
   std::string cppStandard = "-std=c++20";
-  int conceptID = 0;
   Config(Config&&) noexcept = delete;
   Config(const Config&) = delete;
 
@@ -25,7 +24,7 @@ public:
   static Config& getInstance() {
     static Config config = Config();
     return config;
-  }  
+  }
 
 };
 

@@ -1,11 +1,18 @@
-/*
-TODO:
-  Analyze the concept names of the given code.
-  If there exists concept names with prefix "techName_Concept",
+/*! \brief
+  Analyze the concept names of the given code. It only accomplishes two missions:
+  
+  First, it finds the suitable concept names to be inserted.
+  Specifically, if there exists concept names with prefix "techName_Concept",
   then return the biggest following ID (`id`) after this prefix.
   This is important for the name initialization of our inserted concepts.
   e.g., if `id` is 78, then `Add1stConcept` will starts with the first concept with id 79.
   For each concept inserted, the id of our concept will be increased by 1.
+  
+  Second, it records the main feature of each existing concept,
+  which is how to make it correct. 
+
+  This Analysis is only done once at the very beginning of this tech, before all the mutations
+  specifically.
 */
 
 #include <algorithm>
@@ -15,6 +22,7 @@ TODO:
 #include "../include/Analyzer.hpp"
 #include "../include/Utils.hpp"
 #include "../include/Config.hpp"
+#include "../include/AnalyzeResult.hpp"
 
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
@@ -39,8 +47,11 @@ public:
     // First analyze if the concept name has the expected form
     // If it has, record the concept ID in its name
     std::string name = decl->getQualifiedNameAsString();
+    // Update conceptNames
+    AnalyzeResult::getInstance().conceptNames.push_back(name);
     std::optional<std::string> ID = getConceptID(name, Config::getInstance().techName + "_Concept");
-    if (ID.has_value()) Config::getInstance().conceptID = std::max(Config::getInstance().conceptID, std::stoi(ID.value()) + 1);
+    // Update conceptID
+    if (ID.has_value()) AnalyzeResult::getInstance().conceptID = std::max(AnalyzeResult::getInstance().conceptID, std::stoi(ID.value()) + 1);
     // Then record the line number of this concept in the source code
     // Update the biggest line number
     FullSourceLoc FullLocation = ctx->getFullLoc(decl->getBeginLoc());
