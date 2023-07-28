@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "../include/Analyzer.hpp"
+#include "../include/Analyzers.hpp"
 #include "../include/Utils.hpp"
 
-TEST(AnalyzeConceptNameTest, AnalyzeConceptName1) {
+TEST(AnalyzerTest, AnalyzeConceptNameTest_1) {
   std::string code = read("code_pool/1.cpp");
   auto lastdefined_concept_name = AnalyzeConceptName(code);
   EXPECT_TRUE(lastdefined_concept_name.has_value());

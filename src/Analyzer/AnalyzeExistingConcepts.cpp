@@ -19,10 +19,10 @@
 #include <optional>
 #include <utility>
 
-#include "../include/AnalyzeResult.hpp"
-#include "../include/Analyzer.hpp"
-#include "../include/Config.hpp"
-#include "../include/Utils.hpp"
+#include "../../include/AnalyzeResult.hpp"
+#include "../../include/Analyzers.hpp"
+#include "../../include/Config.hpp"
+#include "../../include/Utils.hpp"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/FileManager.h"

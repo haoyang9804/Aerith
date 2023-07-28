@@ -1,10 +1,40 @@
+# This copy is required. Folder code_pool contains
+# all files that are ready to be analyzed or mutated.
+# Without COPY, unit tests cannot find the path to codes.
+file(COPY 
+  ${CMAKE_CURRENT_SOURCE_DIR}/code_pool
+  DESTINATION
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 file(GLOB_RECURSE TESTS
   *.cpp
 )
 
-message("test files include " ${TESTS})
+list(FILTER TESTS EXCLUDE REGEX "code_pool/.*")
 
-add_executable(test_${PROJECT_NAME} ${TESTS})
-target_compile_features(test_${PROJECT_NAME} PRIVATE ${STD})
-target_include_directories(test_${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/tests)
-target_link_libraries(test_${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_lib)
+message(STATUS "google test cases include " ${TESTS})
+
+add_executable(
+  googletest_${PROJECT_NAME}
+  ${TESTS}
+)
+
+target_compile_features(googletest_${PROJECT_NAME} PRIVATE ${STD})
+
+target_include_directories(
+  googletest_${PROJECT_NAME}
+  PRIVATE
+  ${PROJECT_SOURCE_DIR}/include
+)
+
+target_link_libraries(
+  googletest_${PROJECT_NAME}
+  PRIVATE
+  ${PROJECT_NAME}_lib
+  GTest::gtest_main
+)
+
+include(GoogleTest)
+
+gtest_discover_tests(googletest_${PROJECT_NAME})

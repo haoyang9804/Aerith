@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include "../include/Config.hpp"
-#include "../include/Mutators.hpp"
-#include "../include/Utils.hpp"
+#include "../../include/Config.hpp"
+#include "../../include/Mutators.hpp"
+#include "../../include/Utils.hpp"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/FileManager.h"

@@ -1,5 +1,4 @@
-#ifndef ANALYZER_HPP_
-#define ANALYZER_HPP_
+#pragma once
 
 #include <optional>
 #include <string>
@@ -18,5 +17,3 @@
  * @return the name of the concept that is last defined (could be nullopt)
  */
 std::optional<std::string> AnalyzeConceptName(std::string code);
-
-#endif

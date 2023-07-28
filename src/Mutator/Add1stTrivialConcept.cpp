@@ -1,8 +1,8 @@
-#include "../include/AnalyzeResult.hpp"
-#include "../include/Analyzer.hpp"
-#include "../include/Config.hpp"
-#include "../include/Mutators.hpp"
-#include "../include/Utils.hpp"
+#include "../../include/AnalyzeResult.hpp"
+#include "../../include/Analyzers.hpp"
+#include "../../include/Config.hpp"
+#include "../../include/Mutators.hpp"
+#include "../../include/Utils.hpp"
 
 std::string Add1stTrivialConcept(std::string code) {
   auto lastdefined_concept_name = AnalyzeConceptName(code);
