@@ -12,6 +12,10 @@ message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 include(AddLLVM)
 include(${Clang_DIR}/AddClang.cmake)
 
+
+option(DEV "Examples for further development" ON)
+
+
 file(GLOB_RECURSE SRCS 
     src/*.cpp
 )
@@ -23,7 +27,10 @@ target_include_directories(${PROJECT_NAME}_lib
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
 )
-set_target_properties(${PROJECT_NAME}_lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+if(DEV)
+  set_target_properties(${PROJECT_NAME}_lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+endif()
+
 target_link_libraries(${PROJECT_NAME}_lib
   PRIVATE
   clangAST
@@ -53,17 +60,16 @@ add_custom_target(
 # ${CMAKE_CURRENT_BINARY_DIR}/tests/test_${PROJECT_NAME}
 # )
 
+if(DEV)
+  add_subdirectory(DEV)
+endif()
 include(FetchContent)
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE 
 )
-
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
 FetchContent_MakeAvailable(googletest)
-
 enable_testing()
-
 add_subdirectory(tests)

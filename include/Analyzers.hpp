@@ -17,3 +17,13 @@
  * @return the name of the concept that is last defined (could be nullopt)
  */
 std::optional<std::string> AnalyzeConceptName(std::string code);
+
+/**
+ * @brief This function analyzes the existing functions in
+ * the given code, extracting their names and parameter informations.
+ * This function is called initially before [AddTrivialTemplate].
+ * 
+ * @param code 
+ */
+
+void AnalyzeFunctions(std::string code);

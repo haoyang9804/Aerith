@@ -12,6 +12,7 @@ file(GLOB_RECURSE TESTS
 )
 
 list(FILTER TESTS EXCLUDE REGEX "code_pool/.*")
+list(FILTER TESTS EXCLUDE REGEX "test_DEV.cpp")
 
 message(STATUS "google test cases include " ${TESTS})
 
@@ -35,6 +36,33 @@ target_link_libraries(
   GTest::gtest_main
 )
 
+if (DEV)
+  add_executable(
+    googletest_${PROJECT_NAME}_dev
+    test_DEV.cpp
+  )
+  target_compile_features(
+    googletest_${PROJECT_NAME}_dev
+    PRIVATE
+    ${STD}
+  )
+  target_include_directories(
+    googletest_${PROJECT_NAME}_dev
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/DEV
+  )
+  target_link_libraries(
+    googletest_${PROJECT_NAME}_dev
+    PRIVATE
+    ${PROJECT_NAME}_dev_lib
+    GTest::gtest_main
+  )
+endif()
+
 include(GoogleTest)
 
 gtest_discover_tests(googletest_${PROJECT_NAME})
+
+if (DEV)
+  gtest_discover_tests(googletest_${PROJECT_NAME}_dev)
+endif()

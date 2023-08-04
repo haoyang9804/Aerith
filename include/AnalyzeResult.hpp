@@ -2,6 +2,9 @@
 
 #include <string>
 #include <vector>
+#include <utility>
+
+#include "clang/Basic/SourceLocation.h"
 
 class AnalyzeResult {
  private:
@@ -15,6 +18,16 @@ class AnalyzeResult {
 
   int conceptID = 0;
   std::vector<std::string> conceptNames;
+
+  struct F {
+    int ID;
+    std::string f_name;
+    std::vector<std::pair<std::string, clang::SourceLocation>> parameter_types_info;
+    F() {}
+    F(int ID, std::string f_name) : ID(ID), f_name(f_name) {}
+  };
+
+  std::vector<F> funcs;
 
   static AnalyzeResult& getInstance() {
     static AnalyzeResult r = AnalyzeResult();

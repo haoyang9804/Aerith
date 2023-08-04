@@ -1,6 +1,4 @@
-#ifndef CONFIG_HPP_
-#define CONFIG_HPP_
-
+#pragma once
 #include <string>
 
 struct Config {
@@ -27,5 +25,3 @@ struct Config {
     return config;
   }
 };
-
-#endif
